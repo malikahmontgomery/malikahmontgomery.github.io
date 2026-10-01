@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Making Enterprise AI Trustworthy at Scale | Malikah Montgomery</title>
+<meta name="description" content="An engineering leader's point of view on enterprise AI adoption and governance, with a free AI use case triage scorecard.">
+<meta property="og:title" content="Making Enterprise AI Trustworthy at Scale">
+<meta property="og:description" content="An engineering leader's point of view on enterprise AI adoption and governance, with a free AI use case triage scorecard.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧭</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F5F6FA;
+    --ink: #1B1F3B;
+    --muted: #555B75;
+    --rule: #D9DCE8;
+    --accent: #B3123A;
+    --panel: #1B1F3B;
+    --panel-ink: #EEF0F8;
+    --panel-muted: #A9AEC9;
+    --panel-rule: #363B63;
+    --apply: #5BC79A;
+    --pilot: #F0B45A;
+    --wait: #B8BDD6;
+    --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+    --sans: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #12142A;
+      --ink: #E8EAF4;
+      --muted: #A3A8C3;
+      --rule: #2C3050;
+      --accent: #FF7A93;
+      --panel: #1D2142;
+      --panel-rule: #3A3F6A;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #12142A;
+    --ink: #E8EAF4;
+    --muted: #A3A8C3;
+    --rule: #2C3050;
+    --accent: #FF7A93;
+    --panel: #1D2142;
+    --panel-rule: #3A3F6A;
+  }
+  *, *::before, *::after { box-sizing: inherit; }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 1.125rem;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); text-underline-offset: 3px; }
+  a:focus-visible, button:focus-visible, input:focus-visible + label {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
+  }
+  .wrap { max-width: 44rem; margin: 0 auto; padding: 0 1.5rem; }
+  .wide { max-width: 64rem; margin: 0 auto; padding: 0 1.5rem; }
+
+  /* Header */
+  .site-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    flex-wrap: wrap; gap: 0.5rem 1.5rem;
+    padding-top: 2rem; padding-bottom: 1rem;
+    font-family: var(--sans); font-size: 0.95rem;
+  }
+  .site-head .name { font-weight: 700; letter-spacing: -0.01em; }
+  .site-head .role { color: var(--muted); }
+
+  /* Hero */
+  .hero { padding: 4.5rem 0 3.5rem; }
+  .hero h1 {
+    font-family: var(--serif); font-weight: 600;
+    font-size: clamp(2.25rem, 5.5vw, 3.75rem);
+    line-height: 1.08; letter-spacing: -0.02em;
+    margin: 0 0 1.75rem;
+    padding-left: 1.25rem;
+    border-left: 6px solid var(--accent);
+  }
+  .hero p { margin: 0 0 1rem; max-width: 36rem; }
+  .hero .lede { font-size: 1.3rem; line-height: 1.55; }
+
+  /* Sections */
+  section { padding: 3rem 0; border-top: 1px solid var(--rule); }
+  h2 {
+    font-family: var(--sans); font-weight: 700;
+    font-size: 1.6rem; line-height: 1.2; letter-spacing: -0.015em;
+    margin: 0 0 1.25rem;
+  }
+  h3 {
+    font-family: var(--sans); font-weight: 600;
+    font-size: 1.1rem; line-height: 1.3;
+    margin: 0 0 0.35rem;
+  }
+  .principles { display: grid; gap: 1.75rem; margin: 0; padding: 0; list-style: none; }
+  .principles p, .proof p { margin: 0; color: var(--muted); }
+  .proof { display: grid; gap: 1.5rem; margin: 0; padding: 0; list-style: none; }
+  .questions { margin: 0; padding-left: 1.2rem; }
+  .questions li { margin-bottom: 0.6rem; font-style: italic; }
+
+  /* Scorecard */
+  .scorecard {
+    background: var(--panel); color: var(--panel-ink);
+    padding: 4rem 0; border-top: 0;
+  }
+  .scorecard h2 { color: var(--panel-ink); font-size: clamp(1.8rem, 4vw, 2.4rem); }
+  .scorecard .intro { color: var(--panel-muted); max-width: 38rem; margin: 0 0 2.5rem; }
+  .sc-grid { display: grid; grid-template-columns: 1fr; gap: 2.5rem; }
+  @media (min-width: 900px) { .sc-grid { grid-template-columns: 1.1fr 0.9fr; gap: 3.5rem; } }
+  fieldset { border: 0; margin: 0 0 1.75rem; padding: 0; }
+  legend {
+    font-family: var(--sans); font-weight: 600; font-size: 1.05rem;
+    padding: 0; margin-bottom: 0.2rem;
+  }
+  .hint { font-size: 0.95rem; color: var(--panel-muted); margin: 0 0 0.7rem; line-height: 1.45; }
+  .choices { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .choices input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .choices label {
+    font-family: var(--sans); font-size: 0.95rem; font-weight: 500;
+    padding: 0.5rem 1rem; border: 1.5px solid var(--panel-rule);
+    border-radius: 999px; cursor: pointer; user-select: none;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+  }
+  .choices label:hover { border-color: var(--panel-muted); }
+  .choices input:checked + label {
+    background: var(--panel-ink); color: var(--panel); border-color: var(--panel-ink);
+  }
+  .result {
+    border: 1.5px solid var(--panel-rule); border-radius: 6px;
+    padding: 1.75rem; align-self: start;
+  }
+  @media (min-width: 900px) { .result { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 1.5rem); } }
+  .verdict {
+    font-family: var(--sans); font-weight: 700;
+    font-size: clamp(2.5rem, 6vw, 3.5rem); line-height: 1;
+    letter-spacing: -0.03em; margin: 0 0 0.75rem;
+    transition: color 0.2s;
+  }
+  .verdict.apply { color: var(--apply); }
+  .verdict.pilot { color: var(--pilot); }
+  .verdict.wait { color: var(--wait); }
+  .verdict.empty { color: var(--panel-muted); font-size: 1.4rem; letter-spacing: 0; }
+  .why { margin: 0 0 1.25rem; }
+  .result h3 { color: var(--panel-ink); margin-top: 0.5rem; }
+  .guardrails { margin: 0.4rem 0 0; padding-left: 1.2rem; color: var(--panel-muted); font-size: 1rem; }
+  .guardrails li { margin-bottom: 0.45rem; }
+  .fine { font-size: 0.9rem; color: var(--panel-muted); margin: 1.25rem 0 0; }
+  .reset {
+    font-family: var(--sans); font-size: 0.9rem; font-weight: 500;
+    background: none; border: 0; color: var(--panel-muted);
+    text-decoration: underline; text-underline-offset: 3px;
+    cursor: pointer; padding: 0; margin-top: 0.5rem;
+  }
+
+  /* Toolkit */
+  .toolkit { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; }
+  .toolkit li {
+    display: grid; grid-template-columns: 1fr auto; gap: 0.25rem 1.5rem;
+    padding: 1.1rem 0; border-bottom: 1px solid var(--rule);
+  }
+  .toolkit li:first-child { border-top: 1px solid var(--rule); }
+  .toolkit p { margin: 0; color: var(--muted); grid-column: 1; }
+  .toolkit .status {
+    font-family: var(--sans); font-size: 0.9rem; color: var(--muted);
+    grid-column: 2; grid-row: 1; align-self: baseline; white-space: nowrap;
+  }
+  .toolkit .status a { font-weight: 600; }
+
+  footer {
+    border-top: 1px solid var(--rule); padding: 2.5rem 0 3rem;
+    font-family: var(--sans); font-size: 0.95rem; color: var(--muted);
+  }
+  footer p { margin: 0 0 0.4rem; }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header class="wrap site-head">
+  <span class="name">Malikah Montgomery</span>
+  <span class="role">Engineering leader | Enterprise AI adoption and governance</span>
+</header>
+
+<main>
+  <div class="wrap hero">
+    <h1>The hard part of enterprise AI is making the output trustworthy.</h1>
+    <p class="lede">Engineers adopt AI tools quickly. Getting people to use them is rarely the problem. The problem is making the output reliable enough that an organization can depend on it.</p>
+    <p>That is a leadership problem before it is a technology problem. This page is my point of view on solving it, along with tools you can use in your own organization.</p>
+  </div>
+
+  <section class="wrap" aria-labelledby="principles">
+    <h2 id="principles">Four principles I lead by</h2>
+    <ul class="principles">
+      <li>
+        <h3>Apply AI where it earns its place</h3>
+        <p>Not every workflow benefits from AI. I partner with business and technology leaders to decide where it creates real value, and I am willing to say where it does not.</p>
+      </li>
+      <li>
+        <h3>Govern the path to production</h3>
+        <p>AI-generated work should reach production through the same discipline as everything else: a clear spec first, human review in the loop, and automated quality gates that scale as output volume grows.</p>
+      </li>
+      <li>
+        <h3>Choose tools by fit, not by hype</h3>
+        <p>Different models and tools suit different stages of delivery. Tool and model decisions should be deliberate, evaluated, and revisited as the landscape changes.</p>
+      </li>
+      <li>
+        <h3>Adoption is a practice, not a mandate</h3>
+        <p>Teams adopt what makes their work easier. Reusable patterns, clear standards, and hands-on enablement move an organization faster than directives do.</p>
+      </li>
+    </ul>
+  </section>
+
+  <section class="scorecard" id="scorecard" aria-labelledby="sc-title">
+    <div class="wide">
+      <h2 id="sc-title">Should this use case get AI?</h2>
+      <p class="intro">A quick triage for any proposed AI use case. Answer four questions and get a starting recommendation, plus the guardrails it would need. Use it to open a conversation with your team, not to close one.</p>
+
+      <div class="sc-grid">
+        <form id="sc-form" onsubmit="return false">
+          <fieldset>
+            <legend>If this works, how much does it matter?</legend>
+            <p class="hint">Time saved, cost reduced, quality improved, or new capability created.</p>
+            <div class="choices">
+              <input type="radio" name="value" id="v1" value="1"><label for="v1">A little</label>
+              <input type="radio" name="value" id="v2" value="2"><label for="v2">Meaningfully</label>
+              <input type="radio" name="value" id="v3" value="3"><label for="v3">A lot</label>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>What happens when the output is wrong?</legend>
+            <p class="hint">High means customer, financial, legal, or safety impact.</p>
+            <div class="choices">
+              <input type="radio" name="risk" id="r1" value="1"><label for="r1">Minor, easily caught</label>
+              <input type="radio" name="risk" id="r2" value="2"><label for="r2">Costly to fix</label>
+              <input type="radio" name="risk" id="r3" value="3"><label for="r3">High impact</label>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Is the data ready?</legend>
+            <p class="hint">Available, reasonably clean, and approved for this use.</p>
+            <div class="choices">
+              <input type="radio" name="data" id="d1" value="1"><label for="d1">Not yet</label>
+              <input type="radio" name="data" id="d2" value="2"><label for="d2">Partly</label>
+              <input type="radio" name="data" id="d3" value="3"><label for="d3">Yes</label>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Can a person check the output before it takes effect?</legend>
+            <p class="hint">A review step, an approval, or an easy way to undo.</p>
+            <div class="choices">
+              <input type="radio" name="review" id="h1" value="1"><label for="h1">No</label>
+              <input type="radio" name="review" id="h2" value="2"><label for="h2">Sometimes</label>
+              <input type="radio" name="review" id="h3" value="3"><label for="h3">Always</label>
+            </div>
+          </fieldset>
+          <button type="button" class="reset" id="sc-reset">Start over</button>
+        </form>
+
+        <div class="result" aria-live="polite">
+          <p class="verdict empty" id="verdict">Answer all four questions to see a recommendation.</p>
+          <p class="why" id="why"></p>
+          <div id="guard-wrap" hidden>
+            <h3>Guardrails to put in place</h3>
+            <ul class="guardrails" id="guardrails"></ul>
+          </div>
+          <p class="fine">Your answers stay in your browser. Nothing is sent or stored.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap" aria-labelledby="proof">
+    <h2 id="proof">Where this comes from</h2>
+    <ul class="proof">
+      <li>
+        <h3>AI-first software delivery</h3>
+        <p>Led an AI-first delivery team of 8 within a global enterprise's product lifecycle modernization. Selected the agentic tooling stack (Cursor orchestrating Claude Opus and GPT-5), established the spec-driven SDLC, and put in place the review and quality gates that governed how AI-generated work reached production.</p>
+      </li>
+      <li>
+        <h3>Standards other teams build against</h3>
+        <p>Defined API governance and reusable blueprints that standardized service development across a large financial services organization.</p>
+      </li>
+      <li>
+        <h3>Architecture ownership</h3>
+        <p>Owned domain architecture for real-time payments processing, including reversals and balance updates, during a mainframe-to-cloud modernization.</p>
+      </li>
+      <li>
+        <h3>Federated delivery</h3>
+        <p>Coordinated across partner teams, vendors, and directors in settings where no single team owned the capability end to end.</p>
+      </li>
+      <li>
+        <h3>Production accountability</h3>
+        <p>20+ years delivering systems with SLAs and on-call ownership across insurance, payments, banking, and retail, including observability work that cut triage time by 60%.</p>
+      </li>
+    </ul>
+  </section>
+
+  <section class="wrap" aria-labelledby="people">
+    <h2 id="people">How I lead people through change</h2>
+    <p>I set clear expectations, then give teams real ownership. I stay close enough to remove roadblocks, and I communicate decisions and the reasoning behind them openly.</p>
+    <p>Most of all, I build the psychological safety that lets someone say "this AI output is wrong" early. That is where trust in AI actually starts.</p>
+  </section>
+
+  <section class="wrap" aria-labelledby="exploring">
+    <h2 id="exploring">Questions I'm exploring</h2>
+    <ul class="questions">
+      <li>How do you evaluate AI output quality at organizational scale?</li>
+      <li>How do you measure AI's impact beyond activity metrics?</li>
+      <li>What does responsible AI governance look like when adoption outpaces policy?</li>
+    </ul>
+  </section>
+
+  <section class="wrap" aria-labelledby="toolkit">
+    <h2 id="toolkit">The toolkit</h2>
+    <p>Free, practical tools drawn from how I lead AI adoption. New ones are added regularly.</p>
+    <ul class="toolkit">
+      <li>
+        <h3>AI Use Case Triage Scorecard</h3>
+        <span class="status"><a href="#scorecard">Use it</a></span>
+        <p>Decide whether a use case should apply AI now, pilot it, or wait.</p>
+      </li>
+      <li>
+        <h3>Code Review Checklist for AI-Generated Code</h3>
+        <span class="status">Coming soon</span>
+        <p>What reviewers should check in AI-generated code that they would not check in code a person wrote.</p>
+      </li>
+      <li>
+        <h3>Spec Template for AI-Assisted Development</h3>
+        <span class="status">Coming soon</span>
+        <p>The structure that makes AI output reviewable before any code exists.</p>
+      </li>
+    </ul>
+  </section>
+</main>
+
+<footer class="wrap">
+  <p>Want to talk about AI adoption in your organization? <a href="https://www.linkedin.com/in/malikahmontgomery">Connect with me on LinkedIn</a>.</p>
+  <p>Written and built by Malikah Montgomery. Hosted on GitHub Pages.</p>
+</footer>
+
+<script>
+(function () {
+  var form = document.getElementById('sc-form');
+  var verdictEl = document.getElementById('verdict');
+  var whyEl = document.getElementById('why');
+  var guardWrap = document.getElementById('guard-wrap');
+  var guardList = document.getElementById('guardrails');
+
+  function val(name) {
+    var el = form.querySelector('input[name="' + name + '"]:checked');
+    return el ? Number(el.value) : 0;
+  }
+
+  function evaluate() {
+    var v = val('value'), r = val('risk'), d = val('data'), h = val('review');
+    if (!v || !r || !d || !h) {
+      verdictEl.className = 'verdict empty';
+      verdictEl.textContent = 'Answer all four questions to see a recommendation.';
+      whyEl.textContent = '';
+      guardWrap.hidden = true;
+      return;
+    }
+
+    var verdict, why;
+    if (d === 1) {
+      verdict = 'wait';
+      why = 'Fix the data first. AI built on data that is missing, messy, or not approved for this use will produce output nobody can trust, however good the model is.';
+    } else if (r === 3 && h === 1) {
+      verdict = 'wait';
+      why = 'The stakes are high and there is no safety net. Design a review or approval step before this goes any further.';
+    } else if (v === 1) {
+      verdict = 'wait';
+      why = 'The payoff is small. The governance, review, and upkeep AI requires would likely cost more than it returns. Spend the effort on a higher value use case.';
+    } else if (v === 3 && d === 3 && (r === 1 || h === 3)) {
+      verdict = 'apply';
+      why = 'Strong value, ready data, and the risk is either low or covered by review. This is a good candidate to build with confidence.';
+    } else {
+      verdict = 'pilot';
+      why = 'Promising, but not proven. Run a time-boxed pilot with a small group, a clear success measure, and a planned decision point at the end.';
+    }
+
+    var guards = ['Define what success looks like, and how you will measure it, before you start.'];
+    if (r >= 2) guards.push('Keep an audit trail of what the AI produced and who approved it.');
+    if (r === 3) guards.push('Require sign-off by a named owner before output reaches customers or production.');
+    if (h === 2) guards.push('Where review is not always possible, review a regular sample and track the error rate.');
+    if (h === 3) guards.push('Give reviewers a checklist so review stays consistent as volume grows.');
+    if (d === 2) guards.push('Add data quality checks, and confirm the data is approved for this use.');
+    if (verdict === 'pilot') guards.push('Set an end date for the pilot and decide in advance what result earns a wider rollout.');
+    if (verdict === 'apply') guards.push('Revisit the model and tool choice on a regular schedule as options change.');
+    if (verdict === 'wait') guards = guards.slice(0, 1).concat(['Write down what would need to change for this to become a pilot, and revisit it then.']);
+
+    verdictEl.className = 'verdict ' + verdict;
+    verdictEl.textContent = verdict === 'apply' ? 'Apply' : verdict === 'pilot' ? 'Pilot' : 'Wait';
+    whyEl.textContent = why;
+    guardList.innerHTML = '';
+    guards.forEach(function (g) {
+      var li = document.createElement('li');
+      li.textContent = g;
+      guardList.appendChild(li);
+    });
+    guardWrap.hidden = false;
+  }
+
+  form.addEventListener('change', evaluate);
+  document.getElementById('sc-reset').addEventListener('click', function () {
+    form.reset();
+    evaluate();
+  });
+})();
+</script>
+</body>
+</html>
